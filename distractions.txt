@@ -1,0 +1,8 @@
+discord.exe
+steam.exe
+epicgameslauncher.exe
+slack.exe
+telegram.exe
+whatsapp.exe
+msedge.exe
+brave.exe
