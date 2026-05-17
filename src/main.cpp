@@ -9,9 +9,18 @@
 
 volatile bool isFocusing = true;
 BOOL WINAPI ConsoleHandler(DWORD signal) {
-    if(signal == CTRL_C_EVENT){
-        std::cout << "\n Exit Signal Caught!" << std::endl;
+    if(signal == CTRL_C_EVENT || signal == CTRL_CLOSE_EVENT ||
+       signal == CTRL_LOGOFF_EVENT || signal == CTRL_SHUTDOWN_EVENT){
+        std::cout << "\n Exit Signal Caught! Cleaning up..." << std::endl;
         isFocusing = false;
+
+        // For CTRL_CLOSE_EVENT and shutdown events, Windows may kill the
+        // process almost immediately after this handler returns. Perform
+        // cleanup right here to guarantee the hosts file is restored.
+        if(signal != CTRL_C_EVENT){
+            RestoreWebsite();
+            std::cout << "\n*** Focus Session Ended ***" << std::endl;
+        }
         return TRUE;
     }
     return FALSE;
@@ -58,7 +67,7 @@ int main() {
     std::cout << "Monitoring for distractions. Press Ctrl + C to exit the session " << std::endl;
 
     try {
-        while(true){
+        while(isFocusing){
             for(const std::string& app : appsToKill){
 
                 // Convert std::string to std::wstring for KillProcessByName

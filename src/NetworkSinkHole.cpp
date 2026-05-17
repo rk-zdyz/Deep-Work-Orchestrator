@@ -29,4 +29,6 @@ void RestoreWebsite(){
     std::cout << "Restoring network rules.." << std::endl;
     CopyFileA(BACKUP_PATH.c_str(), HOSTS_PATH.c_str(), FALSE);
     DeleteFileA(BACKUP_PATH.c_str());
+    // Flush DNS cache so the restored hosts file takes effect immediately
+    system("ipconfig /flushdns > nul 2>&1");
 }
