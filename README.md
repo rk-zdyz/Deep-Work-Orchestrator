@@ -1,4 +1,4 @@
-# 🧠 Deep Work Orchestrator
+# Deep Work Orchestrator
 
 A lightweight, zero-dependency Windows CLI tool that enforces deep focus sessions by **blocking distracting websites**, **launching your workspace apps**, and **continuously killing time-wasting processes** — all from a single executable that requires no installation.
 
@@ -6,20 +6,20 @@ Built with pure C++ and the Win32 API.
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | How It Works |
 |---|---|
-| 📄 **Unified Config** | All settings in a single `config.ini` file with INI-style sections and comment support. |
-| 🌐 **Website Sinkholing** | Redirects distracting domains to `127.0.0.1` via the system `hosts` file. Automatically backs up and restores on exit. |
-| 🚀 **Workspace Launcher** | Opens your productivity apps (VS Code, terminals, browsers, etc.) at session start via `ShellExecute`. |
-| 💀 **Distraction Killer** | Polls running processes every 5 seconds and terminates any that match your blocklist (case-insensitive matching). |
-| 🛡️ **Graceful Exit** | Intercepts `Ctrl+C` to cleanly restore network rules and end the session. |
-| 🔒 **Runs as Admin** | Embedded manifest auto-triggers a UAC elevation prompt — required for `hosts` file access and process termination. |
+| **Unified Config** | All settings in a single `config.ini` file with INI-style sections and comment support. |
+| **Website Sinkholing** | Redirects distracting domains to `127.0.0.1` via the system `hosts` file. Automatically backs up and restores on exit. |
+| **Workspace Launcher** | Opens your productivity apps (VS Code, terminals, browsers, etc.) at session start via `ShellExecute`. |
+| **Distraction Killer** | Polls running processes every 5 seconds and terminates any that match your blocklist (case-insensitive matching). |
+| **Graceful Exit** | Intercepts `Ctrl+C` to cleanly restore network rules and end the session. |
+| **Runs as Admin** | Embedded manifest auto-triggers a UAC elevation prompt — required for `hosts` file access and process termination. |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Deep-Work-Orchestrator/
@@ -42,7 +42,7 @@ Deep-Work-Orchestrator/
 
 ---
 
-## 🛠️ Prerequisites
+## Prerequisites
 
 - **Windows 10/11**
 - **Visual Studio Build Tools 2022** (or any edition with the MSVC C++ toolchain)
@@ -51,7 +51,7 @@ Deep-Work-Orchestrator/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the Repository
 
@@ -86,7 +86,7 @@ steam.exe
 spotify.exe
 ```
 
-> 💡 **Tip:** You don't need to rebuild after editing `config.ini` — just restart `orchestrator.exe`.
+> You don't need to rebuild after editing `config.ini` — just restart `orchestrator.exe`.
 
 ### 3. Build
 
@@ -104,11 +104,11 @@ build.bat
 orchestrator.exe
 ```
 
-> 🛡️ Windows will show a **UAC prompt** — click **Yes**. Administrator access is required to modify the hosts file and terminate other processes.
+> Windows will show a **UAC prompt** — click **Yes**. Administrator access is required to modify the hosts file and terminate other processes.
 
 ---
 
-## 🔄 Session Lifecycle
+## Session Lifecycle
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -144,7 +144,7 @@ orchestrator.exe
 
 ---
 
-## ⚠️ Important Notes
+## Important Notes
 
 - **Run as Administrator** — The tool modifies `C:\Windows\System32\drivers\etc\hosts`. Without admin rights, website blocking will fail silently.
 - **Hosts file backup** — A backup is created at `hosts.backup` before modifications. It is restored automatically on `Ctrl+C`.
@@ -152,12 +152,12 @@ orchestrator.exe
   ```bash
   ipconfig /flushdns
   ```
-- **Process matching** — Process names are matched **case-insensitively**, so `discord.exe` will match `Discord.exe`.
+- **Process matching** — Process names are matched case-insensitively, so `discord.exe` will match `Discord.exe`.
 - **Multi-process apps** — Apps like Discord (Electron-based) spawn multiple processes. The orchestrator kills all instances and will re-kill them if the app auto-restarts.
 - **Antivirus** — Some antivirus software may flag process termination behavior. You may need to whitelist `orchestrator.exe`.
 
 ---
 
-## 📜 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).
