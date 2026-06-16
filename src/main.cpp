@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <fstream>
 #include <windows.h>
+#include "ConfigLoader.h"
 #include "EnvironmentLauncher.h"
 #include "NetworkSinkHole.h"
 #include "ProcessManager.h"
@@ -25,23 +25,6 @@ BOOL WINAPI ConsoleHandler(DWORD signal) {
     }
     return FALSE;
 }
-std::vector<std::string> LoadListFromFile(const std::string& filename) {
-    std::vector<std::string> items;
-    std::ifstream file(filename);
-    std::string line;
-    if(file.is_open()){
-        std::cout << "Reading " << filename << "...." << std::endl;
-        while(std::getline(file, line)){
-            if(!line.empty()){
-                items.push_back(line);
-            }
-        }
-        file.close();
-    } else {
-        std::cout << "Warning. Could not find " << filename << "." << std::endl;
-    }
-    return items;  
-}
 
 int main() {
 
@@ -53,14 +36,13 @@ int main() {
     std::cout << "3. Monitor and stop time-wasting apps" << std::endl;
     std::cout << "\nProtecting your focus...\n" << std::endl;
 
-    std::vector<std::string> websites = LoadListFromFile("websites.txt");
-    std::vector<std::string> appsToLaunch = LoadListFromFile("applications.txt");
-    std::vector<std::string> appsToKill = LoadListFromFile("distractions.txt");
+    Config config = LoadConfig("config.ini");
+
     //1. Sinkholing
-    if(!websites.empty()) BlockWebsite(websites);
+    if(!config.websites.empty()) BlockWebsite(config.websites);
 
     //2. Launch Applications
-    if(!appsToLaunch.empty()) LaunchWorkSpace(appsToLaunch);
+    if(!config.applications.empty()) LaunchWorkSpace(config.applications);
 
     //3. Monitor and Kill
     std::cout << "\n*** Focus Mode Activated ***" << std::endl;
@@ -68,7 +50,7 @@ int main() {
 
     try {
         while(isFocusing){
-            for(const std::string& app : appsToKill){
+            for(const std::string& app : config.distractions){
 
                 // Convert std::string to std::wstring for KillProcessByName
                 std::wstring wapp(app.begin(), app.end());

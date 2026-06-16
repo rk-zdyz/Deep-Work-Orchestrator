@@ -10,7 +10,7 @@ REM /EHsc enables standard C++ error handling
 REM /link /MANIFEST:EMBED embeds our app.manifest into the exe
 REM /OUT names the final file
 
-cl.exe /EHsc /I include src\main.cpp src\ProcessManager.cpp src\NetworkSinkHole.cpp src\EnvironmentLauncher.cpp /link shell32.lib /MANIFESTUAC:NO /MANIFEST:EMBED /MANIFESTINPUT:app.manifest /OUT:orchestrator.exe
+cl.exe /EHsc /I include src\main.cpp src\ConfigLoader.cpp src\ProcessManager.cpp src\NetworkSinkHole.cpp src\EnvironmentLauncher.cpp /link shell32.lib /MANIFESTUAC:NO /MANIFEST:EMBED /MANIFESTINPUT:app.manifest /OUT:orchestrator.exe
 
 if %errorlevel% == 0 (
     echo.

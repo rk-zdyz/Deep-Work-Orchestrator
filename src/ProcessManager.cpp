@@ -11,20 +11,25 @@ void KillProcessByName(const wchar_t* processName){
     PROCESSENTRY32W entry;
     entry.dwSize = sizeof(PROCESSENTRY32W);
 
+    int killCount = 0;
+
     if(Process32FirstW(hSnapShot, &entry)){
         do{
-            if(wcscmp(entry.szExeFile, processName) == 0){
-                std::wcout << L"Found " << processName << L". Termination in process.." << std::endl;
+            if(_wcsicmp(entry.szExeFile, processName) == 0){
                 HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, entry.th32ProcessID);
                 if (hProcess != NULL){
                     TerminateProcess(hProcess, 0);
-                    std::wcout << L"Process Terminated Successfully" << std::endl;
                     CloseHandle(hProcess);
+                    killCount++;
                 } else{
-                    std::wcerr << L"Failed to open process" << std::endl;
+                    std::wcerr << L"[!] Failed to open process: " << processName << std::endl;
                 }
             } 
         } while (Process32NextW(hSnapShot, &entry));
     }
     CloseHandle(hSnapShot);
+
+    if(killCount > 0){
+        std::wcout << L"Killed " << killCount << L" instance(s) of " << processName << std::endl;
+    }
 }

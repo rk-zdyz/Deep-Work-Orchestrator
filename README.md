@@ -23,14 +23,17 @@ Built with pure C++ and the Win32 API.
 ```
 Deep-Work-Orchestrator/
 ├── include/
+│   ├── ConfigLoader.h           # Unified config parser declarations
 │   ├── EnvironmentLauncher.h    # Workspace launcher declarations
 │   ├── NetworkSinkHole.h        # Website blocker declarations
 │   └── ProcessManager.h         # Process killer declarations
 ├── src/
 │   ├── main.cpp                 # Entry point and orchestration loop
+│   ├── ConfigLoader.cpp         # INI-style config file parser
 │   ├── EnvironmentLauncher.cpp  # ShellExecute-based app launcher
 │   ├── NetworkSinkHole.cpp      # Hosts file sinkholing & restore
 │   └── ProcessManager.cpp       # Snapshot-based process termination
+├── config.ini                   # Unified configuration file
 ├── app.manifest                 # UAC elevation manifest (requireAdministrator)
 ├── build.bat                    # One-click MSVC build script
 └── README.md
@@ -56,26 +59,27 @@ git clone https://github.com/rk-zdyz/Deep-Work-Orchestrator.git
 cd Deep-Work-Orchestrator
 ```
 
-### 2. Configure Your Lists
+### 2. Configure Your Session
 
-Create three text files in the project root (one entry per line):
+Edit `config.ini` in the project root. All settings live in one file with INI-style sections:
 
-**`websites.txt`** — Domains to block
-```
+```ini
+# Lines starting with '#' are comments
+
+[websites]
+# Domains to redirect to 127.0.0.1 (www. variant is added automatically)
 youtube.com
 reddit.com
 twitter.com
 instagram.com
-```
 
-**`applications.txt`** — Apps to launch at session start
-```
+[applications]
+# Programs to launch when the session starts
 code
 notepad++
-```
 
-**`distractions.txt`** — Process names to auto-kill
-```
+[distractions]
+# Process names to auto-kill (exact .exe name from Task Manager)
 Discord.exe
 Telegram.exe
 Spotify.exe
