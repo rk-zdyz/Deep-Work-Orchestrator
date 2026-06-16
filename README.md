@@ -10,9 +10,10 @@ Built with pure C++ and the Win32 API.
 
 | Feature | How It Works |
 |---|---|
+| 📄 **Unified Config** | All settings in a single `config.ini` file with INI-style sections and comment support. |
 | 🌐 **Website Sinkholing** | Redirects distracting domains to `127.0.0.1` via the system `hosts` file. Automatically backs up and restores on exit. |
 | 🚀 **Workspace Launcher** | Opens your productivity apps (VS Code, terminals, browsers, etc.) at session start via `ShellExecute`. |
-| 💀 **Distraction Killer** | Polls running processes every 5 seconds and terminates any that match your blocklist. |
+| 💀 **Distraction Killer** | Polls running processes every 5 seconds and terminates any that match your blocklist (case-insensitive matching). |
 | 🛡️ **Graceful Exit** | Intercepts `Ctrl+C` to cleanly restore network rules and end the session. |
 | 🔒 **Runs as Admin** | Embedded manifest auto-triggers a UAC elevation prompt — required for `hosts` file access and process termination. |
 
@@ -74,16 +75,18 @@ twitter.com
 instagram.com
 
 [applications]
-# Programs to launch when the session starts
+# Programs to launch when the session starts (must be in PATH or use full path)
 code
-notepad++
+alacritty
 
 [distractions]
-# Process names to auto-kill (exact .exe name from Task Manager)
-Discord.exe
-Telegram.exe
-Spotify.exe
+# Process names to auto-kill (case-insensitive, use .exe name from Task Manager)
+discord.exe
+steam.exe
+spotify.exe
 ```
+
+> 💡 **Tip:** You don't need to rebuild after editing `config.ini` — just restart `orchestrator.exe`.
 
 ### 3. Build
 
@@ -114,20 +117,24 @@ orchestrator.exe
 └──────────────────┬──────────────────────────┘
                    │
           ┌────────▼────────┐
-          │  Block Websites │  ← websites.txt → hosts file
+          │  Load config.ini│  ← [websites], [applications], [distractions]
+          └────────┬────────┘
+                   │
+          ┌────────▼────────┐
+          │  Block Websites │  → hosts file sinkholing
           └────────┬────────┘
                    │
          ┌─────────▼─────────┐
-         │  Launch Workspace  │  ← applications.txt → ShellExecute
+         │  Launch Workspace  │  → ShellExecute
          └─────────┬─────────┘
                    │
         ┌──────────▼──────────┐
-        │   Monitor & Kill    │  ← distractions.txt → every 5s
+        │   Monitor & Kill    │  → every 5s (case-insensitive)
         │   (active loop)     │
         └──────────┬──────────┘
                    │  Ctrl+C
          ┌─────────▼─────────┐
-         │  Restore Network  │  ← hosts file backup restored
+         │  Restore Network  │  → hosts file backup restored + DNS flush
          └─────────┬─────────┘
                    │
             ┌──────▼──────┐
@@ -141,10 +148,12 @@ orchestrator.exe
 
 - **Run as Administrator** — The tool modifies `C:\Windows\System32\drivers\etc\hosts`. Without admin rights, website blocking will fail silently.
 - **Hosts file backup** — A backup is created at `hosts.backup` before modifications. It is restored automatically on `Ctrl+C`.
-- **DNS Cache** — After the session ends, you may need to flush your DNS cache for unblocking to take effect immediately:
+- **DNS Cache** — The tool automatically flushes your DNS cache on session end. If sites are still blocked after exit, run manually:
   ```bash
   ipconfig /flushdns
   ```
+- **Process matching** — Process names are matched **case-insensitively**, so `discord.exe` will match `Discord.exe`.
+- **Multi-process apps** — Apps like Discord (Electron-based) spawn multiple processes. The orchestrator kills all instances and will re-kill them if the app auto-restarts.
 - **Antivirus** — Some antivirus software may flag process termination behavior. You may need to whitelist `orchestrator.exe`.
 
 ---
