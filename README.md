@@ -21,7 +21,7 @@ Built with pure C++ and the Win32 API.
 ## 📁 Project Structure
 
 ```
-Deep-Work-Orchastrator/
+Deep-Work-Orchestrator/
 ├── include/
 │   ├── EnvironmentLauncher.h    # Workspace launcher declarations
 │   ├── NetworkSinkHole.h        # Website blocker declarations
@@ -52,8 +52,8 @@ Deep-Work-Orchastrator/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/rk-zdyz/Deep-Work-Orchastrator.git
-cd Deep-Work-Orchastrator
+git clone https://github.com/rk-zdyz/Deep-Work-Orchestrator.git
+cd Deep-Work-Orchestrator
 ```
 
 ### 2. Configure Your Lists
